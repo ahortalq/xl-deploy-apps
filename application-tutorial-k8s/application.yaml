@@ -1,6 +1,6 @@
 ################################################################################
 # This is a parametrized template. It must be used as follow:
-# xl apply -f application.yaml --values version=1.0.0-B44
+# xl apply -f application.yaml --values version=1.0.0
 ################################################################################
 ---
 apiVersion: xl-deploy/v1
