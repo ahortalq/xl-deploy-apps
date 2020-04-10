@@ -1,0 +1,13 @@
+###############################
+# xl apply -f directories.yaml
+###############################
+---
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- name: Applications/Applications
+  type: core.Directory
+- name: Applications/Applications/application-tutorial
+  type: core.Directory
+- name: !format Applications/Applications/application-tutorial/tutorial-k8s
+  type: udm.Application

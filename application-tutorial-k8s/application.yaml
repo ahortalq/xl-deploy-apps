@@ -1,0 +1,22 @@
+################################################################################
+# This is a parametrized template. It must be used as follow:
+# xl apply -f application.yaml --values version=1.0.0-B44
+################################################################################
+---
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- name: !format Applications/Applications/application-tutorial/tutorial-k8s/%version%
+  type: udm.DeploymentPackage
+  deployables:
+  - name: tutorial
+    type: uccm.ContainerSpec
+    image: !format lyhsoft/tutorial:%version%
+    replicas: 3
+    profile: production
+    ports:
+    - name: port
+      type: uccm.ContainerPortSpec
+      containerPort: 1234
+      servicePort: 80
+      exposeAsIngress: true
