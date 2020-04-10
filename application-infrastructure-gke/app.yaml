@@ -1,0 +1,35 @@
+################################################################################
+# This is a parametrized template. It must be used as follow:
+# xl apply -f app.yaml --values project=voting-app-k8s,version=2.0.0
+################################################################################
+---
+apiVersion: xl-deploy/v1
+kind: Applications
+spec:
+- name: Applications/Infrastructures
+  type: core.Directory
+- name: Applications/Infrastructures/Terraform
+  type: core.Directory
+- name: !format Applications/Infrastructures/Terraform/infrastructure-%project%
+  type: udm.Application
+- name: !format Applications/Infrastructures/Terraform/infrastructure-%project%/%version%
+  type: udm.DeploymentPackage
+  deployables:
+  - name: !format infrastructure-%project%
+    type: terraform.Module
+    boundTemplates:
+    - !format Applications/Infrastructures/Terraform/infrastructure-%project%/%version%/template-gke-cluster
+    automaticDictionary: false
+    inputVariables:
+      gke_cluster_name: '{{gke_cluster_name}}'
+      number_of_nodes: '{{number_of_nodes}}'
+    file: !file "artifacts"
+  templates:
+  - name: template-gke-cluster
+    type: template.k8s.Master
+    instanceName: '{{%outputVariables.gke_cluster_name%}}'
+    apiServerURL: '{{%outputVariables.cluster_endpoint%}}'
+    skipTLS: "true"
+    caCert: '{{%outputVariables.cluster_ca_certificate%}}'
+    tlsCert: '{{%outputVariables.client_certificate%}}'
+    tlsPrivateKey: '{{%outputVariables.client_key%}}'
